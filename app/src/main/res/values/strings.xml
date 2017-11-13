@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Music_app</string>
+    <string name="one">Tab One</string>
+    <string name="two">Tab Two</string>
+    <string name="three">Tab Three</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
