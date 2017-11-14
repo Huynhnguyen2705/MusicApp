@@ -11,6 +11,10 @@ import android.support.v4.app.FragmentTransaction
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
+import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
@@ -21,11 +25,32 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
 
     private var mAuth: FirebaseAuth? = null
     private var mAhthStateListener: FirebaseAuth.AuthStateListener? = null
+    private var mUsername: String? = null
+    private val RC_SIGN_IN = 1234
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        var currentUser: FirebaseUser? = mAuth?.currentUser
+        mAhthStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+            if (currentUser != null) {
+                // user is signed-in
+                Toast.makeText(this, "Welcome " + currentUser.displayName, Toast.LENGTH_SHORT).show()
+            } else {
+                // user is signed-out
+                val providers = listOf<AuthUI.IdpConfig>(
+                        AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                        AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()
+                )
+                startActivityForResult(
+                        AuthUI.getInstance()
+                                .createSignInIntentBuilder()
+                                .setAvailableProviders(providers)
+                                .build(), RC_SIGN_IN)
+            }
+        }
 
         // Fire base Auth
         mAuth = FirebaseAuth.getInstance()
@@ -48,17 +73,39 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
 
         val tabLayout = findViewById<TabLayout>(R.id.tabs) as TabLayout
         tabLayout.setupWithViewPager(viewPager)
+
+
     }
 
     override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accodingly
-        var currentUser: FirebaseUser? = mAuth?.currentUser
-        mAhthStateListener = FirebaseAuth.AuthStateListener {
+
+        mAhthStateListener?.let { mAuth?.addAuthStateListener(it) }
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
 
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.sign_out_menu -> {
+                AuthUI.getInstance().signOut(this)
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
         }
+    }
 
+
+    override fun onPause() {
+        super.onPause()
+        mAhthStateListener?.let { mAuth?.removeAuthStateListener(it) }
     }
     /* we don't have call beginTransaction() and commit everytime add or replace fragment
     * we can use multiple operations inside inTransaction block

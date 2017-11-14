@@ -9,4 +9,9 @@
 
     <!-- The text displayed at home screen. Example: Hottest Songs, Pop..-->
     <string name="Songs"><xliff:g example="Hottest Songs" id="songs">%s</xliff:g></string>
+
+    <string name="facebook_app_id">1750641754978423</string>
+    <string name="fb_login_protocol_scheme">fb1750641754978423</string>
+    <string name="sign_out">Sign out</string>
+
 </resources>
