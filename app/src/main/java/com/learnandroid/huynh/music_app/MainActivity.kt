@@ -1,5 +1,6 @@
 package com.learnandroid.huynh.music_app
 
+import android.app.Activity
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -8,24 +9,26 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.view.ViewPager
-import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.view.View
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 
 class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionListener,
         TwiceFragment.OnFragmentInteractionListener, ThriceFragment.OnFragmentInteractionListener {
 
 
+    private var mAuth: FirebaseAuth? = null
+    private var mAhthStateListener: FirebaseAuth.AuthStateListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        
-
+        // Fire base Auth
+        mAuth = FirebaseAuth.getInstance()
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
@@ -44,9 +47,19 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
         setupViewPager(viewPager,listOfFragment)
 
         val tabLayout = findViewById<TabLayout>(R.id.tabs) as TabLayout
-        tabLayout?.setupWithViewPager(viewPager)
+        tabLayout.setupWithViewPager(viewPager)
     }
 
+    override fun onStart() {
+        super.onStart()
+        // Check if user is signed in (non-null) and update UI accodingly
+        var currentUser: FirebaseUser? = mAuth?.currentUser
+        mAhthStateListener = FirebaseAuth.AuthStateListener {
+
+
+        }
+
+    }
     /* we don't have call beginTransaction() and commit everytime add or replace fragment
     * we can use multiple operations inside inTransaction block
     */
@@ -89,6 +102,7 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
 internal class ViewPagerAdapter(manager: android.support.v4.app.FragmentManager) : FragmentPagerAdapter(manager) {
     private val mFragmentList: MutableList<android.support.v4.app.Fragment> = mutableListOf<android.support.v4.app.Fragment>()
     private val mFragmentTitleList: MutableList<String> = mutableListOf<String>()
+    private val mActivityList: MutableList<Activity> = mutableListOf<Activity>()
 
     override fun getItem(position: Int): android.support.v4.app.Fragment? {
         return mFragmentList.get(position)

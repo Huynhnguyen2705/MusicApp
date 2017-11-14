@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Music_app</string>
     <string name="one">Tab One</string>
     <string name="two">Tab Two</string>
@@ -6,4 +6,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- The text displayed at home screen. Example: Hottest Songs, Pop..-->
+    <string name="Songs"><xliff:g example="Hottest Songs" id="songs">%s</xliff:g></string>
 </resources>

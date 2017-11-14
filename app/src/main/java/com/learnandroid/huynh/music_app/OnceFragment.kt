@@ -1,12 +1,15 @@
 package com.learnandroid.huynh.music_app
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.activity_fragment_one.*
+import kotlinx.android.synthetic.main.image_custom_view.view.*
 
 
 /**
@@ -22,6 +25,14 @@ class OnceFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var mParam1: String? = null
     private var mParam2: String? = null
+    val hottestSongs: String = "Hottest Songs"
+    val pop: String = "Pop"
+    val electronic: String = "Electronic"
+    val urban: String = "Urban"
+    val country: String = "Country"
+    val rock: String = "Rock"
+    val hottestImage: Int = R.mipmap.world_map_green
+
 
     private var mListener: OnFragmentInteractionListener? = null
 
@@ -55,6 +66,13 @@ class OnceFragment : Fragment() {
         }
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        // hottest banner
+        hottestBanner.textSongsBanner.text = hottestSongs
+        hottestBanner.imageSongsBanner.setImageResource(hottestImage)
+    }
     override fun onDetach() {
         super.onDetach()
         mListener = null
@@ -69,6 +87,17 @@ class OnceFragment : Fragment() {
         }
 
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        hottestBanner.imageSongsBanner.setOnClickListener {
+            val onlineIntent = Intent(this.context, OnlineActivity::class.java)
+            onlineIntent.putExtra("typeOfSongs", hottestSongs)
+            startActivity(onlineIntent)
+        }
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
