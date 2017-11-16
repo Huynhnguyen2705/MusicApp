@@ -1,6 +1,7 @@
 package com.learnandroid.huynh.music_app
 
 import android.app.Activity
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -16,6 +17,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.auth.FirebaseUser
 
 
@@ -23,34 +25,31 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
         TwiceFragment.OnFragmentInteractionListener, ThriceFragment.OnFragmentInteractionListener {
 
 
+    // Firebase Authentication variable
     private var mAuth: FirebaseAuth? = null
-    private var mAhthStateListener: FirebaseAuth.AuthStateListener? = null
-    private var mUsername: String? = null
-    private val RC_SIGN_IN = 1234
+    // Listener Auth
+    private var mAhthStateListener: AuthStateListener? = null
+    // Current User is logging
+    private var currentUser: FirebaseUser? = null
+    // an arbitrary request code value
+    private val RC_SIGN_IN: Int = 1234
+    // Fragments - the items on tab layout
+    private var listOfFragment: MutableList<Fragment> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var currentUser: FirebaseUser? = mAuth?.currentUser
-        mAhthStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
-            if (currentUser != null) {
-                // user is signed-in
-                Toast.makeText(this, "Welcome " + currentUser.displayName, Toast.LENGTH_SHORT).show()
-            } else {
-                // user is signed-out
-                val providers = listOf<AuthUI.IdpConfig>(
-                        AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
-                        AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()
-                )
-                startActivityForResult(
-                        AuthUI.getInstance()
-                                .createSignInIntentBuilder()
-                                .setAvailableProviders(providers)
-                                .build(), RC_SIGN_IN)
-            }
-        }
+        // list of fragments - list of tab items
+        val onceFragment: Fragment = OnceFragment()
+        val twiceFragment: Fragment = TwiceFragment()
+        val thriceFragment: Fragment = ThriceFragment()
+        // add them to list
+        listOfFragment.add(onceFragment)
+        listOfFragment.add(twiceFragment)
+        listOfFragment.add(thriceFragment)
+
 
         // Fire base Auth
         mAuth = FirebaseAuth.getInstance()
@@ -60,21 +59,75 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-
-        val listOfFragment: MutableList<Fragment> = mutableListOf<Fragment>()
-        val onceFragment: Fragment = OnceFragment()
-        val twiceFragment: Fragment = TwiceFragment()
-        val thriceFragment: Fragment = ThriceFragment()
-        listOfFragment.add(onceFragment)
-        listOfFragment.add(twiceFragment)
-        listOfFragment.add(thriceFragment)
         val viewPager = findViewById<ViewPager>(R.id.viewpager) as ViewPager
-        setupViewPager(viewPager,listOfFragment)
-
         val tabLayout = findViewById<TabLayout>(R.id.tabs) as TabLayout
+        setUpTabLayout(viewPager, tabLayout)
+
+        login()
+
+    }
+
+    /**
+     * This func use Firebase AuthUI to create UI and log in from Email, Google and Facebook account
+     */
+    private fun login() {
+        if (currentUser == null) {
+            // Choose authentication providers
+            val providers: List<AuthUI.IdpConfig> = listOf(
+                    AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                    AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build())
+
+// Create and launch sign-in intent
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setAvailableProviders(providers)
+                            .setIsSmartLockEnabled(!BuildConfig.DEBUG)
+                            .build(),
+                    RC_SIGN_IN)
+        }
+    }
+
+    /**
+     * This funs set up the Tab layout at this Activity
+     * @param viewPager: the viewpager is set up by func: setupViewPager(viewPager:ViewPager, MutableList<Fragment>)
+     * @param tabLayout: the tabLayout that you want to set up
+     */
+    private fun setUpTabLayout(viewPager: ViewPager, tabLayout: TabLayout) {
+        // listOfFragment:
+        setupViewPager(viewPager, listOfFragment)
         tabLayout.setupWithViewPager(viewPager)
+    }
 
+    /**
+     * this func set up the viewPager
+     * @param viewPager: the viewpager that you want to set up
+     * @param listOfFragment:  the list of Fragments is showed in the set up tab layout
+     */
+    private fun setupViewPager(viewPager: ViewPager, listOfFragment: MutableList<Fragment>) {
+        if (listOfFragment.size > 0) {
+            val adapter = ViewPagerAdapter(supportFragmentManager) // using the custom viewpager adapter
+            adapter.addFragment(listOfFragment[0], "ONE") // add fragment to the adapter and set its title
+            adapter.addFragment(listOfFragment[1], "TWO")
+            adapter.addFragment(listOfFragment[2], "THREE")
+            viewPager.adapter = adapter //set viewpager's adapter
+        }
+    }
 
+    /**
+     * this func use in login() func by Firebase AuthUI
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        currentUser = mAuth?.currentUser // login successfully and having current user info
+        var userName: String = currentUser?.displayName.toString() // userName from current user info
+        if (requestCode == RC_SIGN_IN) {// if needing sign in
+            if (resultCode == Activity.RESULT_OK) {// sign in successfully
+                Toast.makeText(this, "Welcome " + userName, Toast.LENGTH_SHORT).show()//welcome user
+            } else if (requestCode == Activity.RESULT_CANCELED) { //if user cancel the sign in
+                finish()
+            }
+        }
     }
 
     override fun onStart() {
@@ -85,6 +138,12 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        mAhthStateListener?.let { mAuth?.addAuthStateListener(it) }
+    }
+
+    // create menu view
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.main_menu, menu)
@@ -92,13 +151,29 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
     }
 
 
+    /**
+     * the sign out func use AuthUI
+     */
+    private fun logOut() {
+        AuthUI.getInstance()
+                .signOut(this) // signing out when sign_out item clicked
+                .addOnCompleteListener {
+                    // user is now signed out
+                    Toast.makeText(this@MainActivity, "You signed out", Toast.LENGTH_SHORT).show()
+                    recreate() // reload this Activity to sign in another account
+                }
+    }
+
+    /**
+     * handle sign_out_menu_item clicked
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.sign_out_menu -> {
-                AuthUI.getInstance().signOut(this)
-                return true
+        return when (item.itemId) {
+            R.id.sign_out -> {
+                logOut()
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -107,6 +182,7 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
         super.onPause()
         mAhthStateListener?.let { mAuth?.removeAuthStateListener(it) }
     }
+
     /* we don't have call beginTransaction() and commit everytime add or replace fragment
     * we can use multiple operations inside inTransaction block
     */
@@ -131,14 +207,6 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
         supportFragmentManager.inTransaction { replace(frameId, fragment) }
     }
 
-    private fun setupViewPager(viewPager: ViewPager, listOfFragment: MutableList<Fragment>) {
-        val adapter = ViewPagerAdapter(supportFragmentManager)
-        adapter.addFragment(listOfFragment[0], "ONE")
-        adapter.addFragment(listOfFragment[1], "TWO")
-        adapter.addFragment(listOfFragment[2], "THREE")
-        viewPager.adapter = adapter
-    }
-
 
     override fun onFragmentInteraction(uri: Uri) {
     }
@@ -147,9 +215,8 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
 
 
 internal class ViewPagerAdapter(manager: android.support.v4.app.FragmentManager) : FragmentPagerAdapter(manager) {
-    private val mFragmentList: MutableList<android.support.v4.app.Fragment> = mutableListOf<android.support.v4.app.Fragment>()
-    private val mFragmentTitleList: MutableList<String> = mutableListOf<String>()
-    private val mActivityList: MutableList<Activity> = mutableListOf<Activity>()
+    private val mFragmentList = mutableListOf<Fragment>()
+    private val mFragmentTitleList = mutableListOf<String>()
 
     override fun getItem(position: Int): android.support.v4.app.Fragment? {
         return mFragmentList.get(position)

@@ -17,7 +17,7 @@ import android.view.ViewGroup
  * Use the [ThriceFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ThriceFragment() : Fragment() {
+class ThriceFragment : Fragment() {
 
 
     // TODO: Rename and change types of parameters
