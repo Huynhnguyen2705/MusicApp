@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        // TODO: check if device doesn't have INTERNET
 
         // list of fragments - list of tab items
         val onceFragment: Fragment = OnceFragment()
