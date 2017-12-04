@@ -4,6 +4,12 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Music_app.iml" filepath="$PROJECT_DIR$/Music_app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/arm-fmmr/arm-fmmr.iml" filepath="$PROJECT_DIR$/arm-fmmr/arm-fmmr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/arm_64-fmmr/arm_64-fmmr.iml" filepath="$PROJECT_DIR$/arm_64-fmmr/arm_64-fmmr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/armv7-fmmr/armv7-fmmr.iml" filepath="$PROJECT_DIR$/armv7-fmmr/armv7-fmmr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mips-fmmr/mips-fmmr.iml" filepath="$PROJECT_DIR$/mips-fmmr/mips-fmmr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/x86-fmmr/x86-fmmr.iml" filepath="$PROJECT_DIR$/x86-fmmr/x86-fmmr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/x86_64-fmmr/x86_64-fmmr.iml" filepath="$PROJECT_DIR$/x86_64-fmmr/x86_64-fmmr.iml" />
     </modules>
   </component>
 </project>

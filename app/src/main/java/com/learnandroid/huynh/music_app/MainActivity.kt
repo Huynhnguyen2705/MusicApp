@@ -1,9 +1,13 @@
 package com.learnandroid.huynh.music_app
 
+import Entity.Track
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -12,29 +16,41 @@ import android.support.v4.app.FragmentTransaction
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
+import wseemann.media.FFmpegMediaMetadataRetriever
 
 
 class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionListener,
         TwiceFragment.OnFragmentInteractionListener, ThriceFragment.OnFragmentInteractionListener {
 
 
+    // Firebase Storage
+    var mStorageRef: StorageReference? = null
     // Firebase Authentication variable
-    private var mAuth: FirebaseAuth? = null
+    var mAuth: FirebaseAuth? = null
     // Listener Auth
-    private var mAhthStateListener: AuthStateListener? = null
-    // Current User is logging
-    private var currentUser: FirebaseUser? = null
+    var mAhthStateListener: AuthStateListener? = null
     // an arbitrary request code value
-    private val RC_SIGN_IN: Int = 1234
+    val RC_SIGN_IN: Int = 1234
+
+    // request code for upload track
+    val RC_UPLOAD: Int = 12345
+
     // Fragments - the items on tab layout
-    private var listOfFragment: MutableList<Fragment> = mutableListOf()
+    var listOfFragment: MutableList<Fragment> = mutableListOf()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -55,6 +71,13 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
         // Fire base Auth
         mAuth = FirebaseAuth.getInstance()
 
+        // Firebase Database
+        val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
+        var mDatabaseReference = mFirebaseDatabase.reference
+
+        //Firebase storage reference
+        mStorageRef = FirebaseStorage.getInstance().reference
+
         val toolbar = findViewById<Toolbar>(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
@@ -65,14 +88,68 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
         setUpTabLayout(viewPager, tabLayout)
 
         login()
+        pushInfoUser(mDatabaseReference)
+        val uploadBtn = findViewById<Button>(R.id.upload) as Button
+
+        uploadBtn.setOnClickListener { it: View? ->
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.type = "audio/*"
+            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+            // create choser and call onActivityResult() with Request code = RC_UPLOAD
+            startActivityForResult(Intent.createChooser(intent, "Complete action"), RC_UPLOAD)
+        }
+
 
     }
+
+
+    /**
+     * This func to push info current user
+     */
+    fun pushInfoUser(mDatabaseReference: DatabaseReference) {
+        var userID: String = mDatabaseReference.push().key
+        var userName: String = mAuth?.currentUser?.displayName.toString()
+        var userEmail: String = mAuth?.currentUser?.email.toString()
+
+        Log.v("userName", userName)
+        var user: Entity.User = Entity.User(userName, userEmail)
+
+        mDatabaseReference.child("users").child(userID).child("email")
+        mDatabaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+
+            // check duplicate users
+            override fun onDataChange(data: DataSnapshot?) {
+                if (!data?.exists()!!) {
+                    mDatabaseReference.child("users").child(userID).setValue(user, { databaseError: DatabaseError?, databaseReference: DatabaseReference ->
+                        Log.v("userinfo", "Successful. Or error" + databaseError)
+
+                    })
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+        })
+    }
+
+    /**
+     * Push track info to firebase realtime databas
+     */
+    fun pushInfoTrack(track: Track) {
+        // Firebase Database
+        val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
+        var mDatabaseReference = mFirebaseDatabase.reference
+        val trackID: String = mDatabaseReference.push().key
+        mDatabaseReference.child("tracks").child(trackID).setValue(track)
+    }
+
 
     /**
      * This func use Firebase AuthUI to create UI and log in from Email, Google and Facebook account
      */
     private fun login() {
-        if (currentUser == null) {
+        if (mAuth?.currentUser == null) {
             // Choose authentication providers
             val providers: List<AuthUI.IdpConfig> = listOf(
                     AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
@@ -87,6 +164,7 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
                             .build(),
                     RC_SIGN_IN)
         }
+
     }
 
     /**
@@ -120,16 +198,77 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        currentUser = mAuth?.currentUser // login successfully and having current user info
-        var userName: String = currentUser?.displayName.toString() // userName from current user info
+        var userName: String = mAuth?.currentUser?.displayName.toString() // userName from current user info
         if (requestCode == RC_SIGN_IN) {// if needing sign in
             if (resultCode == Activity.RESULT_OK) {// sign in successfully
                 Toast.makeText(this, "Welcome " + userName, Toast.LENGTH_SHORT).show()//welcome user
             } else if (requestCode == Activity.RESULT_CANCELED) { //if user cancel the sign in
                 finish()
             }
+        } else if (requestCode == RC_UPLOAD && resultCode == Activity.RESULT_OK) {
+            val selectedTrackUri: Uri? = data?.data // uri from a chosen audio
+
+            var mmr = FFmpegMediaMetadataRetriever()
+            val path = getRealPathFromURI_API19(this, selectedTrackUri!!)
+            mmr.setDataSource(path)
+            val trackTitle = mmr.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_TITLE)
+            // Get a reference to store file at  userName/tracks/<FILENAME>
+            val trackRef = mStorageRef?.child(userName)?.child("tracks")?.child(trackTitle)?.child(trackTitle + "_track")
+            // Upload file to Firebase Storage
+            trackRef?.putFile(selectedTrackUri)?.addOnSuccessListener { taskSnapshot: UploadTask.TaskSnapshot? ->
+                run {
+                    val downloadUrl: Uri? = taskSnapshot?.downloadUrl
+
+                    // Set the download URL to the message box, so that the user can send it to the database
+
+                    val trackImageRef = mStorageRef?.child(userName)?.child("tracks")?.child(trackTitle)?.child(trackTitle + "_image")
+
+                    trackImageRef?.putBytes(mmr.embeddedPicture)?.addOnSuccessListener { taskSnapshot: UploadTask.TaskSnapshot? ->
+                        run {
+                            val downloadTrackImageUrl: Uri? = taskSnapshot?.downloadUrl
+
+                            val track = Track(trackTitle, downloadTrackImageUrl.toString(), downloadUrl.toString(), 0)
+//                        Log.v("trackInfo","Title: " + trackTitle)
+//                        Log.v("trackInfo","ImageUrl: " + downloadTrackImageUrl.toString())
+//                        Log.v("trackInfo","Link: " + downloadUrl.toString())
+                            pushInfoTrack(track)
+                            Toast.makeText(this, "SUCCESSFULLY!", Toast.LENGTH_SHORT).show()
+
+                        }
+                    }?.addOnFailureListener { exception: java.lang.Exception -> Toast.makeText(this, "Error" + exception, Toast.LENGTH_SHORT).show() }
+
+
+                }
+            }?.addOnFailureListener { exception: java.lang.Exception -> Toast.makeText(this, "Error" + exception, Toast.LENGTH_SHORT).show() }
+
         }
     }
+
+    fun getRealPathFromURI_API19(context: Context, uri: Uri): String {
+        var filePath = ""
+        val wholeID = DocumentsContract.getDocumentId(uri)
+
+        // Split at colon, use second item in the array
+        val id = wholeID.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
+
+        val column = arrayOf(MediaStore.Audio.Media.DATA)
+
+        // where id is equal to
+        val sel = MediaStore.Audio.Media._ID + "=?"
+
+        val cursor = context.contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                column, sel, arrayOf(id), null)
+
+        val columnIndex = cursor!!.getColumnIndex(column[0])
+
+        if (cursor.moveToFirst()) {
+            filePath = cursor.getString(columnIndex)
+        }
+        cursor.close()
+        return filePath
+    }
+
+
 
     override fun onStart() {
         super.onStart()
@@ -211,6 +350,7 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
 
     override fun onFragmentInteraction(uri: Uri) {
     }
+
 
 }
 

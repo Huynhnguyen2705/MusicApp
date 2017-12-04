@@ -96,6 +96,7 @@ class OnceFragment : Fragment() {
             onlineIntent.putExtra("typeOfSongs", hottestSongs)
             startActivity(onlineIntent)
         }
+
     }
 
 

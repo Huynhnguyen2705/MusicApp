@@ -1,17 +1,18 @@
 package Entity
 
 
-class Track {
-    private var ID: Long = 0
-    private var name: String = ""
-    private var image: String = ""
-    private var listeningCount: Int = 0
-    private var favoutire: Boolean = false
-    private var artists: List<Boolean>? = null
-    private var albums: List<Boolean>? = null
-    private var composers: List<Boolean>? = null
-    private var playLists: List<Boolean>? = null
-    private var genres: List<Boolean>? = null
-    private var users: List<Boolean>? = null
+class Track(val name: String, val imageURL: String, val trackURL: String, var listeningCount: Int) {
+//     var name: String =""
+//
+//     var imageURL: String = ""
+//     var trackURL:String = ""
+//     var listeningCount: Int = 0
+//     var favoutire: Boolean = false
+//     var artists: List<Boolean>? = null
+//     var albums: List<Boolean>? = null
+//     var composers: List<Boolean>? = null
+//     var playLists: List<Boolean>? = null
+//     var genres: List<Boolean>? = null
+//     var users: List<Boolean>? = null
 
 }

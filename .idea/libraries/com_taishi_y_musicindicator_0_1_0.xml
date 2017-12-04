@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="com.taishi-y:musicindicator-0.1.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/musicindicator-0.1.0.aar/56a26e0059996d1d6a24c83eb2188a36/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/musicindicator-0.1.0.aar/56a26e0059996d1d6a24c83eb2188a36/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.taishi-y/musicindicator/0.1.0/467a5dc25ee9cd92415af1b27f59abc67b43b9e4/musicindicator-0.1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

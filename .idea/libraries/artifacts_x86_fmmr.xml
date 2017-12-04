@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="artifacts:x86-fmmr">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/x86-fmmr.aar/ea87f9038e64894b4f9b34201c0ec4f6/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/x86-fmmr.aar/ea87f9038e64894b4f9b34201c0ec4f6/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

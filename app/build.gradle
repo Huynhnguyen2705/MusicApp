@@ -22,32 +22,87 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        pickFirst 'lib/x86/libswscale.so'
+        pickFirst 'lib/x86/libavcodec.so'
+        pickFirst 'lib/x86/libavformat.so'
+        pickFirst 'lib/x86/libavutil.so'
+        pickFirst 'lib/x86/libffmpeg_mediametadataretriever_jni.so'
+
+        pickFirst 'lib/armeabi/libavformat.so'
+        pickFirst 'lib/armeabi/libavcodec.so'
+        pickFirst 'lib/armeabi/libavutil.so'
+        pickFirst 'lib/armeabi/libswscale.so'
+        pickFirst 'lib/armeabi/libffmpeg_mediametadataretriever_jni.so'
+
+        pickFirst 'lib/armeabi-v7a/libavformat.so'
+        pickFirst 'lib/armeabi-v7a/libavcodec.so'
+        pickFirst 'lib/armeabi-v7a/libswscale.so'
+        pickFirst 'lib/armeabi-v7a/libavutil.so'
+        pickFirst 'lib/armeabi-v7a/libffmpeg_mediametadataretriever_jni.so'
+
+        pickFirst 'lib/arm64-v8a/libavformat.so'
+        pickFirst 'lib/arm64-v8a/libavcodec.so'
+        pickFirst 'lib/arm64-v8a/libavutil.so'
+        pickFirst 'lib/arm64-v8a/libswscale.so'
+        pickFirst 'lib/arm64-v8a/libffmpeg_mediametadataretriever_jni.so'
+
+        pickFirst 'lib/mips/libavformat.so'
+        pickFirst 'lib/mips/libavutil.so'
+        pickFirst 'lib/mips/libavcodec.so'
+        pickFirst 'lib/mips/libswscale.so'
+        pickFirst 'lib/mips/libffmpeg_mediametadataretriever_jni.so'
+
+        pickFirst 'lib/x86_64/libavutil.so'
+        pickFirst 'lib/x86_64/libffmpeg_mediametadataretriever_jni.so'
+        pickFirst 'lib/x86_64/libavcodec.so'
+        pickFirst 'lib/x86_64/libswscale.so'
+        pickFirst 'lib/x86_64/libavformat.so'
+//
+//        exclude 'META-INF/DEPENDENCIES.txt'
+//        exclude 'META-INF/NOTICE'
+//        exclude 'META-INF/NOTICE.txt'
+//        exclude 'META-INF/LICENSE'
+//        exclude 'META-INF/LICENSE.txt'
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.google.firebase:firebase-auth:11.4.2'
+    implementation 'com.google.firebase:firebase-database:11.4.2'
+    implementation 'com.google.firebase:firebase-storage:11.4.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    compile 'com.android.support:multidex:1.0.2'
-
-
+    implementation 'com.android.support:multidex:1.0.2'
     //google play service
     compile 'com.google.android.gms:play-services:11.4.2'
     // google support design
     compile 'com.android.support:design:26.1.0'
-
     // Firebase UI auth
     compile 'com.firebaseui:firebase-ui-auth:3.1.0'
-
+    compile 'com.google.firebase:firebase-auth:11.4.2'
     // Required only if Facebook login support is required
     compile 'com.facebook.android:facebook-android-sdk:4.28.0'
+    // animation play music
+    implementation 'com.taishi-y:musicindicator:0.1.0'
+    // FFmpegMediaMetadataRetriever
+    implementation 'com.github.wseemann:FFmpegMediaMetadataRetriever:1.0.14'
+    implementation project(':arm-fmmr')
+    implementation project(':arm_64-fmmr')
+    implementation project(':armv7-fmmr')
+    implementation project(':mips-fmmr')
+    implementation project(':x86-fmmr')
+    implementation project(':x86_64-fmmr')
+
 }
+
+
 
 
 apply plugin: 'com.google.gms.google-services'

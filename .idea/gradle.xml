@@ -9,6 +9,12 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/arm-fmmr" />
+            <option value="$PROJECT_DIR$/arm_64-fmmr" />
+            <option value="$PROJECT_DIR$/armv7-fmmr" />
+            <option value="$PROJECT_DIR$/mips-fmmr" />
+            <option value="$PROJECT_DIR$/x86-fmmr" />
+            <option value="$PROJECT_DIR$/x86_64-fmmr" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
