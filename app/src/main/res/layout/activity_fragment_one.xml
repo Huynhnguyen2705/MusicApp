@@ -8,17 +8,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
         <include
             android:id="@+id/hottestBanner"
             layout="@layout/image_custom_view" />
 
         <include
-            android:id="@+id/popBanner"
+            android:id="@+id/electronicBanner"
             layout="@layout/image_custom_view" />
 
         <include
-            android:id="@+id/electronicBanner"
+            android:id="@+id/urbanBanner"
+            layout="@layout/image_custom_view" />
+
+        <include
+            android:id="@+id/countryBanner"
+            layout="@layout/image_custom_view" />
+
+        <include
+            android:id="@+id/rockBanner"
+            layout="@layout/image_custom_view" />
+
+        <include
+            android:id="@+id/latinBanner"
             layout="@layout/image_custom_view" />
     </LinearLayout>
 

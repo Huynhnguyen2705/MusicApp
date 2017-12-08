@@ -25,13 +25,13 @@ class OnceFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var mParam1: String? = null
     private var mParam2: String? = null
-    val hottestSongs: String = "Hottest Songs"
-    val pop: String = "Pop"
-    val electronic: String = "Electronic"
-    val urban: String = "Urban"
-    val country: String = "Country"
-    val rock: String = "Rock"
-    val hottestImage: Int = R.mipmap.world_map_green
+    val hottestImage: Int = R.drawable.hostest_song
+    val electronicImage: Int = R.drawable.electronic
+    val urbanImage: Int = R.drawable.urban
+    val countryImage: Int = R.drawable.country
+    val rockImage: Int = R.drawable.rock
+    val latinImage: Int = R.drawable.latin
+
 
 
     private var mListener: OnFragmentInteractionListener? = null
@@ -70,8 +70,12 @@ class OnceFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         // hottest banner
-        hottestBanner.textSongsBanner.text = hottestSongs
-        hottestBanner.imageSongsBanner.setImageResource(hottestImage)
+        hottestBanner.imageSongsBanner.setBackgroundResource(hottestImage)
+        electronicBanner.imageSongsBanner.setBackgroundResource(electronicImage)
+        urbanBanner.imageSongsBanner.setBackgroundResource(urbanImage)
+        countryBanner.imageSongsBanner.setBackgroundResource(countryImage)
+        rockBanner.imageSongsBanner.setBackgroundResource(rockImage)
+        latinBanner.imageSongsBanner.setBackgroundResource(latinImage)
     }
     override fun onDetach() {
         super.onDetach()
@@ -93,7 +97,32 @@ class OnceFragment : Fragment() {
 
         hottestBanner.imageSongsBanner.setOnClickListener {
             val onlineIntent = Intent(this.context, OnlineActivity::class.java)
-            onlineIntent.putExtra("typeOfSongs", hottestSongs)
+            onlineIntent.putExtra("Image", "hottest")
+            startActivity(onlineIntent)
+        }
+        electronicBanner.imageSongsBanner.setOnClickListener {
+            val onlineIntent = Intent(this.context, OnlineActivity::class.java)
+            onlineIntent.putExtra("Image", "electronic")
+            startActivity(onlineIntent)
+        }
+        urbanBanner.imageSongsBanner.setOnClickListener {
+            val onlineIntent = Intent(this.context, OnlineActivity::class.java)
+            onlineIntent.putExtra("Image", "urban")
+            startActivity(onlineIntent)
+        }
+        countryBanner.imageSongsBanner.setOnClickListener {
+            val onlineIntent = Intent(this.context, OnlineActivity::class.java)
+            onlineIntent.putExtra("Image", "country")
+            startActivity(onlineIntent)
+        }
+        rockBanner.imageSongsBanner.setOnClickListener {
+            val onlineIntent = Intent(this.context, OnlineActivity::class.java)
+            onlineIntent.putExtra("Image", "rock")
+            startActivity(onlineIntent)
+        }
+        latinBanner.imageSongsBanner.setOnClickListener {
+            val onlineIntent = Intent(this.context, OnlineActivity::class.java)
+            onlineIntent.putExtra("Image", "latin")
             startActivity(onlineIntent)
         }
 

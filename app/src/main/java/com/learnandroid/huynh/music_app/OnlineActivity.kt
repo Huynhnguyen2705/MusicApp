@@ -13,7 +13,26 @@ class OnlineActivity : AppCompatActivity() {
         setContentView(R.layout.activity_online)
 
         // get extra string from Home Screen, value: Hottest Songs
-        val hottestString = intent.getStringExtra("typeOfSongs")
-        imageHeader.textSongsBanner.text = hottestString
+        val image = intent.extras.getString("Image")
+
+        if (image == "hottest") {
+            val image: Int = R.drawable.hostest_song
+            imageHeader.imageSongsBanner.setBackgroundResource(image)
+        } else if (image == "electronic") {
+            val image: Int = R.drawable.electronic
+            imageHeader.imageSongsBanner.setBackgroundResource(image)
+        } else if (image == "urban") {
+            val image: Int = R.drawable.urban
+            imageHeader.imageSongsBanner.setBackgroundResource(image)
+        } else if (image == "country") {
+            val image: Int = R.drawable.country
+            imageHeader.imageSongsBanner.setBackgroundResource(image)
+        } else if (image == "rock") {
+            val image: Int = R.drawable.rock
+            imageHeader.imageSongsBanner.setBackgroundResource(image)
+        } else if (image == "latin") {
+            val image: Int = R.drawable.latin
+            imageHeader.imageSongsBanner.setBackgroundResource(image)
+        }
     }
 }
