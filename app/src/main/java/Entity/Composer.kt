@@ -18,15 +18,15 @@ class Composer(var id: String, val name: String, val imageURL: String) {
         val ID: String = mDatabaseReference.push().key
         v_object.id = ID
 
-        mDatabaseReference.child("composers").child(ID).child("name")
+        mDatabaseReference.child("composers")
         mDatabaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
 
             }
 
             override fun onDataChange(p0: DataSnapshot?) {
-                if (!p0!!.exists()) {
-                    mDatabaseReference.child("composers").child(ID).setValue(v_object)
+                if (!p0!!.child(v_object.name).exists()) {
+                    mDatabaseReference.child("composers").child(v_object.name).setValue(v_object)
                 }
             }
 

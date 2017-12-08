@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "444472147444",
+    "firebase_url": "https://musicapp-15ce8.firebaseio.com",
+    "project_id": "musicapp-15ce8",
+    "storage_bucket": "musicapp-15ce8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:444472147444:android:a57810455813b354",
+        "android_client_info": {
+          "package_name": "com.learnandroid.huynh.music_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "444472147444-pir2md3ue6i0h6tvcnfu261bbma5sbu0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.learnandroid.huynh.music_app",
+            "certificate_hash": "5557d2b234f69d639ce9e19ce874fa5fc808f975"
+          }
+        },
+        {
+          "client_id": "444472147444-uh8c1m64e6p0oe13tdbcn7lujjougukr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.learnandroid.huynh.music_app",
+            "certificate_hash": "b2093cd19e1ea5ba409f26996b83be623744c119"
+          }
+        },
+        {
+          "client_id": "444472147444-ov34613racagghi7ajkr2jqq8c5n308n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCT9tGmqv3tewTkl0h6zrcYoCTEwrZeZOA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "444472147444-ov34613racagghi7ajkr2jqq8c5n308n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

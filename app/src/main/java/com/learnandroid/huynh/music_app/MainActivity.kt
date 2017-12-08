@@ -253,10 +253,10 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
                             track = Track("", trackTitle, downloadTrackImageUrl.toString(), downloadUrl.toString(),
                                     album_id, artist_id, composer_id, genre_id, 0)
                             val track_id = track!!.pushInfoToFDB(track!!)
-                            album!!.pushUpdateTrackInfo(track_id, trackTitle, album!!)
-                            artist!!.pushUpdateTrackInfo(track_id, trackTitle, artist!!)
-                            genre!!.pushUpdateTrackInfo(track_id, trackTitle, genre!!)
-                            if (composer_name != "") composer!!.pushUpdateTrackInfo(track_id, trackTitle, composer!!)
+//                            album!!.pushUpdateTrackInfo(track_id, trackTitle, album!!)
+//                            artist!!.pushUpdateTrackInfo(track_id, trackTitle, artist!!)
+//                            genre!!.pushUpdateTrackInfo(track_id, trackTitle, genre!!)
+//                            if (composer_name != "") composer!!.pushUpdateTrackInfo(track_id, trackTitle, composer!!)
 
 
 
