@@ -54,14 +54,14 @@ class Artist(var id: String, val name: String, val imageURL: String, val listeni
         // Firebase Database
         val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
         var mDatabaseReference = mFirebaseDatabase.reference
-        mDatabaseReference.child("artists").child(artist.id).child("tracks").child(track_ID)
+        mDatabaseReference.child("artists")
         mDatabaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
                 Log.e("Artist upload", "Update error" + p0.toString())
             }
 
             override fun onDataChange(p0: DataSnapshot?) {
-                if (!p0!!.exists()) {
+                if (!p0!!.child(artist.name).child("tracks").child(track_ID).exists()) {
 
                     // value to push update
                     val trackinfo = HashMap<String, Boolean>()
@@ -71,7 +71,7 @@ class Artist(var id: String, val name: String, val imageURL: String, val listeni
 
                     // update the node
                     val childUpdate = HashMap<String, Any>()
-                    childUpdate.put("/artists/" + artist.id, album_values)
+                    childUpdate.put("/artists/" + artist.name, album_values)
 
                     // update to firebase
                     mDatabaseReference.updateChildren(childUpdate)
