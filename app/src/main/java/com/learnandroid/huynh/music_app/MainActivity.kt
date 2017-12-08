@@ -1,6 +1,6 @@
 package com.learnandroid.huynh.music_app
 
-import Entity.Track
+import Entity.*
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -51,6 +51,16 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
     // Fragments - the items on tab layout
     var listOfFragment: MutableList<Fragment> = mutableListOf()
 
+    // FFmpegMetadataRetriever
+    var mmr: FFmpegMediaMetadataRetriever? = null
+
+    var user: Entity.User? = null
+    var track: Track? = null
+    var album: Album? = null
+    var artist: Artist? = null
+    var composer: Composer? = null
+    var genre: Genre? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -71,9 +81,7 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
         // Fire base Auth
         mAuth = FirebaseAuth.getInstance()
 
-        // Firebase Database
-        val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
-        var mDatabaseReference = mFirebaseDatabase.reference
+
 
         //Firebase storage reference
         mStorageRef = FirebaseStorage.getInstance().reference
@@ -88,7 +96,7 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
         setUpTabLayout(viewPager, tabLayout)
 
         login()
-        pushInfoUser(mDatabaseReference)
+        user = pushInfoUser()
         val uploadBtn = findViewById<Button>(R.id.upload) as Button
 
         uploadBtn.setOnClickListener { it: View? ->
@@ -105,14 +113,19 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
 
     /**
      * This func to push info current user
+     * @param user: user info will be pushed
+     * @return: a user pushed
      */
-    fun pushInfoUser(mDatabaseReference: DatabaseReference) {
-        var userID: String = mDatabaseReference.push().key
-        var userName: String = mAuth?.currentUser?.displayName.toString()
-        var userEmail: String = mAuth?.currentUser?.email.toString()
+    fun pushInfoUser(): User {
+        // Firebase Database
+        val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
+        var mDatabaseReference = mFirebaseDatabase.reference
 
-        Log.v("userName", userName)
-        var user: Entity.User = Entity.User(userName, userEmail)
+        val userID: String = mDatabaseReference.push().key
+        val userName: String = mAuth?.currentUser?.displayName.toString()
+        val userEmail: String = mAuth?.currentUser?.email.toString()
+
+        var v_user = User(userID, userName, userEmail)
 
         mDatabaseReference.child("users").child(userID).child("email")
         mDatabaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -120,7 +133,8 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
             // check duplicate users
             override fun onDataChange(data: DataSnapshot?) {
                 if (!data?.exists()!!) {
-                    mDatabaseReference.child("users").child(userID).setValue(user, { databaseError: DatabaseError?, databaseReference: DatabaseReference ->
+                    mDatabaseReference.child("users").child(userID).setValue(v_user,
+                            { databaseError: DatabaseError?, databaseReference: DatabaseReference ->
                         Log.v("userinfo", "Successful. Or error" + databaseError)
 
                     })
@@ -131,17 +145,7 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
                 println("loadPost:onCancelled ${databaseError.toException()}")
             }
         })
-    }
-
-    /**
-     * Push track info to firebase realtime databas
-     */
-    fun pushInfoTrack(track: Track) {
-        // Firebase Database
-        val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
-        var mDatabaseReference = mFirebaseDatabase.reference
-        val trackID: String = mDatabaseReference.push().key
-        mDatabaseReference.child("tracks").child(trackID).setValue(track)
+        return v_user
     }
 
 
@@ -208,31 +212,60 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
         } else if (requestCode == RC_UPLOAD && resultCode == Activity.RESULT_OK) {
             val selectedTrackUri: Uri? = data?.data // uri from a chosen audio
 
-            var mmr = FFmpegMediaMetadataRetriever()
+            mmr = FFmpegMediaMetadataRetriever()
             val path = getRealPathFromURI_API19(this, selectedTrackUri!!)
-            mmr.setDataSource(path)
-            val trackTitle = mmr.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_TITLE)
+            mmr!!.setDataSource(path)
+            val trackTitle = mmr!!.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_TITLE)
             // Get a reference to store file at  userName/tracks/<FILENAME>
             val trackRef = mStorageRef?.child(userName)?.child("tracks")?.child(trackTitle)?.child(trackTitle + "_track")
-            // Upload file to Firebase Storage
+            // Upload audio file to Firebase Storage
             trackRef?.putFile(selectedTrackUri)?.addOnSuccessListener { taskSnapshot: UploadTask.TaskSnapshot? ->
                 run {
                     val downloadUrl: Uri? = taskSnapshot?.downloadUrl
-
                     // Set the download URL to the message box, so that the user can send it to the database
-
                     val trackImageRef = mStorageRef?.child(userName)?.child("tracks")?.child(trackTitle)?.child(trackTitle + "_image")
-
-                    trackImageRef?.putBytes(mmr.embeddedPicture)?.addOnSuccessListener { taskSnapshot: UploadTask.TaskSnapshot? ->
+                    // Upload Track Image file to Firebase Storage
+                    trackImageRef?.putBytes(mmr!!.embeddedPicture)?.addOnSuccessListener { taskSnapshot: UploadTask.TaskSnapshot? ->
                         run {
                             val downloadTrackImageUrl: Uri? = taskSnapshot?.downloadUrl
 
-                            val track = Track(trackTitle, downloadTrackImageUrl.toString(), downloadUrl.toString(), 0)
+                            val album_name = mmr!!.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ALBUM)
+                            val album_date_release = mmr!!.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DATE)
+                            val artist_name = mmr!!.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_ARTIST)
+                            val composer_name = mmr!!.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_COMPOSER) ?: ""
+                            val genre_name = mmr!!.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_GENRE)
+                            val genre_track = HashMap<String, Boolean>()
+                            album = Album("", album_name, downloadTrackImageUrl.toString(), album_date_release, 0)
+                            artist = Artist("", artist_name, downloadTrackImageUrl.toString(), 0)
+
+                            // check if the audio file has composer
+                            var composer_id: String = ""
+                            if (composer_name != "") {
+                                composer = Composer("", composer_name, downloadTrackImageUrl.toString())
+                                composer_id = composer!!.pushInfoToFDB(composer!!)
+                            }
+                            genre = Genre("", genre_name)
+
+                            val album_id = album!!.pushInfoToFDB(album!!)
+                            val artist_id = artist!!.pushInfoToFDB(artist!!)
+
+                            val genre_id = genre!!.pushInfoToFDB(genre!!)
+                            track = Track("", trackTitle, downloadTrackImageUrl.toString(), downloadUrl.toString(),
+                                    album_id, artist_id, composer_id, genre_id, 0)
+                            val track_id = track!!.pushInfoToFDB(track!!)
+                            album!!.pushUpdateTrackInfo(track_id, trackTitle, album!!)
+                            artist!!.pushUpdateTrackInfo(track_id, trackTitle, artist!!)
+                            genre!!.pushUpdateTrackInfo(track_id, trackTitle, genre!!)
+                            if (composer_name != "") composer!!.pushUpdateTrackInfo(track_id, trackTitle, composer!!)
+
+
+
 //                        Log.v("trackInfo","Title: " + trackTitle)
 //                        Log.v("trackInfo","ImageUrl: " + downloadTrackImageUrl.toString())
 //                        Log.v("trackInfo","Link: " + downloadUrl.toString())
-                            pushInfoTrack(track)
+
                             Toast.makeText(this, "SUCCESSFULLY!", Toast.LENGTH_SHORT).show()
+                            mmr!!.release()
 
                         }
                     }?.addOnFailureListener { exception: java.lang.Exception -> Toast.makeText(this, "Error" + exception, Toast.LENGTH_SHORT).show() }

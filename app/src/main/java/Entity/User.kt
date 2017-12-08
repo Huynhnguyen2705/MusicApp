@@ -1,6 +1,6 @@
 package Entity
 
-class User(val userName: String, val email: String) {
+class User(var id: String, var userName: String, var email: String) {
 //        var name: String = userName
 //        var email:String = email
 //    private var image_url: String = ""
