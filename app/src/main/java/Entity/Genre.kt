@@ -13,21 +13,22 @@ class Genre(var id: String, var name: String) {
      * @param v_object: genre will be pushed to Firebase DB
      * @return: a genre_id pushed
      */
+
     fun pushInfoToFDB(v_object: Genre): String {
         // Firebase Database
         val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
         var mDatabaseReference = mFirebaseDatabase.reference
         var ID: String = mDatabaseReference.push().key
         v_object.id = ID
-        mDatabaseReference.child("genres").child(ID).child("name")
+        mDatabaseReference.child("genres")
         mDatabaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
                 Log.e("Genres upload", "Upload error " + p0.toString())
             }
 
             override fun onDataChange(data: DataSnapshot?) {
-                if (!data!!.exists()) {
-                    mDatabaseReference.child("genres").child(ID).setValue(v_object)
+                if (!data!!.child(v_object.name).exists()) {
+                    mDatabaseReference.child("genres").child(v_object.name).setValue(v_object)
                 }
             }
 
@@ -54,14 +55,14 @@ class Genre(var id: String, var name: String) {
         // Firebase Database
         val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
         var mDatabaseReference = mFirebaseDatabase.reference
-        mDatabaseReference.child("genres").child(genre.id).child("tracks").child(track_ID)
+        mDatabaseReference.child("genres")
         mDatabaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
                 Log.e("Genre upload", "Update error" + p0.toString())
             }
 
             override fun onDataChange(p0: DataSnapshot?) {
-                if (!p0!!.exists()) {
+                if (!p0!!.child(genre.name).child("tracks").child(track_ID).exists()) {
 
                     // value to push update
                     val trackinfo = HashMap<String, Boolean>()
@@ -71,14 +72,16 @@ class Genre(var id: String, var name: String) {
 
                     // update the node
                     val childUpdate = HashMap<String, Any>()
-                    childUpdate.put("/genres/" + genre.id, album_values)
+                    childUpdate.put("/genres/" + genre.name, album_values)
+                    childUpdate.put("/tracks" + track_name + "/" + genre.id, album_values)
 
-                    // update to firebase
+                    //update to firebase
+//                    mDatabaseReference.child("genres").child(genre.name).child("tracks").updateChildren(trackinfo as Map<String, Any>?)
                     mDatabaseReference.updateChildren(childUpdate)
-
                 }
             }
 
         })
     }
+
 }
