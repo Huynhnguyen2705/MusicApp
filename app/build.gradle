@@ -91,6 +91,8 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.28.0'
     // animation play music
     implementation 'com.taishi-y:musicindicator:0.1.0'
+    // Displaying images
+    compile 'com.github.bumptech.glide:glide:3.7.0'
     // FFmpegMediaMetadataRetriever
     implementation 'com.github.wseemann:FFmpegMediaMetadataRetriever:1.0.14'
     implementation project(':arm-fmmr')

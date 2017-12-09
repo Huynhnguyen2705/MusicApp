@@ -7,7 +7,7 @@ import com.google.firebase.database.ValueEventListener
 
 
 class Track(var id: String, var name: String, var imageURL: String, var trackURL: String,
-            var album_id: String, var artist_id: String, var composer_id: String, var genre_id: String, var listeningCount: Int) {
+            var album_name: String, var artist_name: String, var composer_name: String, var genre_name: String, var listeningCount: Int) {
 //     var name: String =""
 //
 //     var imageURL: String = ""
