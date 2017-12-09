@@ -1,10 +1,11 @@
 package com.learnandroid.huynh.music_app
 
 import Entity.Track
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
+import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
@@ -13,8 +14,10 @@ import com.taishi.library.Indicator
 /**
  * Created by Huynh on 12/9/2017.
  */
-class TrackAdapter(listTrack: ArrayList<Track>) : BaseAdapter() {
+class TrackAdapter(context: Context, resource: Int, list: ArrayList<Track>) :
+        ArrayAdapter<Track>(context, resource, list) {
 
+    val list = ArrayAdapter<Track>(context, resource, list)
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
 
         var view: View = p1!!
@@ -38,21 +41,10 @@ class TrackAdapter(listTrack: ArrayList<Track>) : BaseAdapter() {
         //set text
         nameView.text = track.name
 
-        val isClick = imageView.callOnClick()
+        inca.visibility = View.GONE
 
         return view
 
     }
 
-    override fun getItem(p0: Int): Any {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getItemId(p0: Int): Long {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 }

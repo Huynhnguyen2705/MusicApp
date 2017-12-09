@@ -1,7 +1,9 @@
 package com.learnandroid.huynh.music_app
 
+import Entity.Track
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.widget.ListView
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -13,6 +15,10 @@ class OnlineActivity : AppCompatActivity() {
 
     // childListener to read data from firebase
     var childEventListener: ChildEventListener? = null
+
+    //Listview
+    var listView: ListView? = null
+    lateinit var mTrackAdapter: TrackAdapter
 
     //firebase reference
     val mDatabaseFirebase = FirebaseDatabase.getInstance()
@@ -26,6 +32,10 @@ class OnlineActivity : AppCompatActivity() {
         // display image depend on string extras from intent
         getStringExtras(image)
 
+        // Initial listview and track adapter
+        var trackList = ArrayList<Track>()
+        mTrackAdapter = TrackAdapter(this, R.layout.item_listview_cus, trackList)
+        listView?.adapter = mTrackAdapter
 
     }
 
@@ -33,6 +43,7 @@ class OnlineActivity : AppCompatActivity() {
         if (image == "hottest") {
             val image: Int = R.drawable.hostest_song
             imageHeader.imageSongsBanner.setBackgroundResource(image)
+            attachDatabaseReadListener()
         } else if (image == "electronic") {
             val image: Int = R.drawable.electronic
             imageHeader.imageSongsBanner.setBackgroundResource(image)
@@ -56,7 +67,8 @@ class OnlineActivity : AppCompatActivity() {
         childEventListener = object : ChildEventListener {
 
             override fun onChildAdded(dataSnapshot: DataSnapshot, s: String) {
-
+                val track = dataSnapshot.value as Track
+                mTrackAdapter.add(track)
 
             }
 
