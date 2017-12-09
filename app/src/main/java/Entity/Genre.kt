@@ -51,33 +51,38 @@ class Genre(var id: String, var name: String) {
     /**
      * Push artist update
      */
-    fun pushUpdateTrackInfo(track_ID: String, track_name: String, genre: Genre) {
+    fun pushUpdateTrackInfo(track: Track, genre: Genre) {
         // Firebase Database
         val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
         var mDatabaseReference = mFirebaseDatabase.reference
+        mDatabaseReference.push().key
         mDatabaseReference.child("genres")
         mDatabaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
                 Log.e("Genre upload", "Update error" + p0.toString())
             }
-
             override fun onDataChange(p0: DataSnapshot?) {
-                if (!p0!!.child(genre.name).child("tracks").child(track_ID).exists()) {
+                if (!p0!!.child(genre.name).child("tracks").child(track.name).exists()) {
 
-                    // value to push update
-                    val trackinfo = HashMap<String, Boolean>()
-                    trackinfo.put(track_ID, true)
-                    //value exist in album node and value to push update
-                    val album_values = genre.toMap(trackinfo)
+//                    // value to push update
+//                    val trackinfo = HashMap<String, Boolean>()
+//                    trackinfo.put(track_ID, true)
+//                    //value exist in album node and value to push update
+//                    val album_values = genre.toMap(trackinfo)
+//
+//                    // update the node
+///                    val childUpdate = HashMap<String, Any>()
+///                   childUpdate.put("/genres/" + genre.name+"/tracks", trackinfo)
+//                    mDatabaseReference.child("genres").child(genre.name)
+//                    mDatabaseReference
 
-                    // update the node
-                    val childUpdate = HashMap<String, Any>()
-                    childUpdate.put("/genres/" + genre.name, album_values)
-                    childUpdate.put("/tracks" + track_name + "/" + genre.id, album_values)
+                    //childUpdate.put("/tracks/" + track_name + "/" + genre.id, album_values)
+
 
                     //update to firebase
 //                    mDatabaseReference.child("genres").child(genre.name).child("tracks").updateChildren(trackinfo as Map<String, Any>?)
-                    mDatabaseReference.updateChildren(childUpdate)
+                    mDatabaseReference.child("genres").child(genre.name).child("tracks").
+                            child(track.name).setValue(track)
                 }
             }
 

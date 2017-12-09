@@ -242,20 +242,20 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
                             var composer_id: String = ""
                             if (composer_name != "") {
                                 composer = Composer("", composer_name, downloadTrackImageUrl.toString())
-                                composer_id = composer!!.pushInfoToFDB(composer!!)
+                                composer!!.pushInfoToFDB(composer!!)
                             }
                             genre = Genre("", genre_name)
 
-                            val album_id = album!!.pushInfoToFDB(album!!)
-                            val artist_id = artist!!.pushInfoToFDB(artist!!)
+                            album!!.pushInfoToFDB(album!!)
+                            artist!!.pushInfoToFDB(artist!!)
 
-                            val genre_id = genre!!.pushInfoToFDB(genre!!)
+                            genre!!.pushInfoToFDB(genre!!)
                             track = Track("", trackTitle, downloadTrackImageUrl.toString(), downloadUrl.toString(),
-                                    album_id, artist_id, composer_id, genre_id, 0)
+                                    album_name, artist_name, composer_name, genre_name, 0)
                             val track_id = track!!.pushInfoToFDB(track!!)
                             album!!.pushUpdateTrackInfo(track_id, trackTitle, album!!)
                             artist!!.pushUpdateTrackInfo(track_id, trackTitle, artist!!)
-                            genre!!.pushUpdateTrackInfo(track_id, trackTitle, genre!!)
+                            genre!!.pushUpdateTrackInfo(track!!, genre!!)
                             if (composer_name != "") composer!!.pushUpdateTrackInfo(track_id, trackTitle, composer!!)
 
 
@@ -268,11 +268,11 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
                             mmr!!.release()
 
                         }
-                    }?.addOnFailureListener { exception: java.lang.Exception -> Toast.makeText(this, "Error" + exception, Toast.LENGTH_SHORT).show() }
+                    }?.addOnFailureListener { exception: java.lang.Exception -> Log.e("Error", "Error" + exception) }
 
 
                 }
-            }?.addOnFailureListener { exception: java.lang.Exception -> Toast.makeText(this, "Error" + exception, Toast.LENGTH_SHORT).show() }
+            }?.addOnFailureListener { exception: java.lang.Exception -> Log.e("Error", "Error" + exception) }
 
         }
     }
