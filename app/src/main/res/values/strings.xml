@@ -1,5 +1,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">Music_app</string>
+    <string name="app_name">WeMusic</string>
     <string name="one">Tab One</string>
     <string name="two">Tab Two</string>
     <string name="three">Tab Three</string>
@@ -14,5 +14,10 @@
     <string name="fb_login_protocol_scheme">fb1750641754978423</string>
     <string name="sign_out">Sign out</string>
     <string name="sign_in">Sign in</string>
+    <string name="fragment_one">ONLINE</string>
+    <string name="fragment_two">TWO</string>
+    <string name="fragment_three">THREE</string>
+    <string name="upload">Upload</string>
+    <string name="setting">Setting</string>
 
 </resources>

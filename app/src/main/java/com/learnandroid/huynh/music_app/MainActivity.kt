@@ -19,8 +19,6 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
@@ -68,6 +66,7 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
         setContentView(R.layout.activity_main)
         // TODO: check if device doesn't have INTERNET
 
+
         // list of fragments - list of tab items
         val onceFragment: Fragment = OnceFragment()
         val twiceFragment: Fragment = TwiceFragment()
@@ -97,15 +96,15 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
 
         login()
         user = pushInfoUser()
-        val uploadBtn = findViewById<Button>(R.id.upload) as Button
-
-        uploadBtn.setOnClickListener { it: View? ->
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.type = "audio/*"
-            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
-            // create choser and call onActivityResult() with Request code = RC_UPLOAD
-            startActivityForResult(Intent.createChooser(intent, "Complete action"), RC_UPLOAD)
-        }
+//        val uploadBtn = findViewById<Button>(R.id.upload) as Button
+//
+//        uploadBtn.setOnClickListener { it: View? ->
+//            val intent = Intent(Intent.ACTION_GET_CONTENT)
+//            intent.type = "audio/*"
+//            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+//            // create choser and call onActivityResult() with Request code = RC_UPLOAD
+//            startActivityForResult(Intent.createChooser(intent, "Complete action"), RC_UPLOAD)
+//        }
 
 
     }
@@ -190,9 +189,9 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
     private fun setupViewPager(viewPager: ViewPager, listOfFragment: MutableList<Fragment>) {
         if (listOfFragment.size > 0) {
             val adapter = ViewPagerAdapter(supportFragmentManager) // using the custom viewpager adapter
-            adapter.addFragment(listOfFragment[0], "ONE") // add fragment to the adapter and set its title
-            adapter.addFragment(listOfFragment[1], "TWO")
-            adapter.addFragment(listOfFragment[2], "THREE")
+            adapter.addFragment(listOfFragment[0], getString(R.string.fragment_one)) // add fragment to the adapter and set its title
+            adapter.addFragment(listOfFragment[1], getString(R.string.fragment_two))
+            adapter.addFragment(listOfFragment[2], getString(R.string.fragment_three))
             viewPager.adapter = adapter //set viewpager's adapter
         }
     }
@@ -344,6 +343,14 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
         return when (item.itemId) {
             R.id.sign_out -> {
                 logOut()
+                true
+            }
+            R.id.upload -> {
+                val intent = Intent(Intent.ACTION_GET_CONTENT)
+                intent.type = "audio/*"
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+                // create choser and call onActivityResult() with Request code = RC_UPLOAD
+                startActivityForResult(Intent.createChooser(intent, "Complete Action"), RC_UPLOAD)
                 true
             }
             else -> super.onOptionsItemSelected(item)
