@@ -3,18 +3,20 @@ package com.learnandroid.huynh.music_app
 import Entity.Track
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ListView
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.taishi.library.Indicator
 import kotlinx.android.synthetic.main.activity_online.*
 import kotlinx.android.synthetic.main.image_custom_view.view.*
 
 class OnlineActivity : AppCompatActivity() {
 
-    // childListener to read data from firebase
-    var childEventListener: ChildEventListener? = null
+
 
     //Listview
     var listView: ListView? = null
@@ -22,20 +24,30 @@ class OnlineActivity : AppCompatActivity() {
 
     //firebase reference
     val mDatabaseFirebase = FirebaseDatabase.getInstance()
-    var mDatabaseRef = mDatabaseFirebase.reference
+    var mDatabaseRef = mDatabaseFirebase.reference.child("tracks")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_online)
 
+
         // get extra string from Home Screen, value: Hottest Songs
         val image = intent.extras.getString("Image")
-        // display image depend on string extras from intent
-        getStringExtras(image)
-
         // Initial listview and track adapter
-        var trackList = ArrayList<Track>()
+        listView = findViewById<ListView?>(R.id.listViewCustom)
+        var trackList: ArrayList<Track> = ArrayList<Track>()
         mTrackAdapter = TrackAdapter(this, R.layout.item_listview_cus, trackList)
         listView?.adapter = mTrackAdapter
+
+        // display image depend on string extras from intent
+        getStringExtras(image)
+        attachDatabaseReadListener()
+
+        listView!!.onItemClickListener = AdapterView.OnItemClickListener { adapterView: AdapterView<*>, view1: View, i: Int, l: Long ->
+            val indicator = view1.findViewById<Indicator>(R.id.indicator)
+            indicator.visibility = View.VISIBLE
+        }
+
 
     }
 
@@ -43,7 +55,6 @@ class OnlineActivity : AppCompatActivity() {
         if (image == "hottest") {
             val image: Int = R.drawable.hostest_song
             imageHeader.imageSongsBanner.setBackgroundResource(image)
-            attachDatabaseReadListener()
         } else if (image == "electronic") {
             val image: Int = R.drawable.electronic
             imageHeader.imageSongsBanner.setBackgroundResource(image)
@@ -64,11 +75,13 @@ class OnlineActivity : AppCompatActivity() {
 
     fun attachDatabaseReadListener() {
 
-        childEventListener = object : ChildEventListener {
+        mDatabaseRef.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
+                if (dataSnapshot.hasChildren()) {
+                    val track = dataSnapshot.getValue(Track::class.java)
+                    mTrackAdapter.add(track)
+                }
 
-            override fun onChildAdded(dataSnapshot: DataSnapshot, s: String) {
-                val track = dataSnapshot.value as Track
-                mTrackAdapter.add(track)
 
             }
 
@@ -81,20 +94,10 @@ class OnlineActivity : AppCompatActivity() {
             override fun onChildMoved(dataSnapshot: DataSnapshot, s: String) {}
 
             override fun onCancelled(databaseError: DatabaseError) {}
-        }
+        })
 
-        mDatabaseRef.addChildEventListener(childEventListener)
+
     }
 
-    private fun detachDatabaseReadListener() {
-        if (childEventListener != null) {
-            mDatabaseRef.removeEventListener(childEventListener)
-            childEventListener = null
-        }
-    }
 
-    override fun onPause() {
-        super.onPause()
-        detachDatabaseReadListener()
-    }
 }

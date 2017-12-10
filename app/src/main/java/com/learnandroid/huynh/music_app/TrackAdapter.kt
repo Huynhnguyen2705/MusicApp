@@ -9,42 +9,48 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import com.taishi.library.Indicator
 
 /**
  * Created by Huynh on 12/9/2017.
  */
-class TrackAdapter(context: Context, resource: Int, list: ArrayList<Track>) :
-        ArrayAdapter<Track>(context, resource, list) {
+class TrackAdapter(context: Context, var resource: Int, var trackList: ArrayList<Track>) :
+        ArrayAdapter<Track>(context, resource, trackList) {
 
-    val list = ArrayAdapter<Track>(context, resource, list)
-    override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
 
-        var view: View = p1!!
-        if (view == null) {
-            view = LayoutInflater.from(p2!!.context).inflate(R.layout.image_custom_view, null, false)
+    var vi: LayoutInflater
+
+    init {
+        this.resource = resource
+        this.vi = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    }
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+
+        var view: View? = convertView
+
+        if (convertView == null) {
+            view = vi.inflate(resource, null)
 
         }
 
-        var track: Track = getItem(p0) as Track
+        var track = trackList[position]
 
         // get view
-        val imageView = view.findViewById<ImageView>(R.id.imageTrack) as ImageView
-        val nameView = view.findViewById<TextView>(R.id.nameTrack) as TextView
-        val inca = view.findViewById<com.taishi.library.Indicator>(R.id.indicator) as Indicator
+        val imageView = view!!.findViewById<ImageView>(R.id.imageTrack)
+        val nameView = view.findViewById<TextView>(R.id.nameTrack)
+        val inca = view.findViewById<com.taishi.library.Indicator>(R.id.indicator)
 
         //set image
-        Glide.with(imageView.context)
+        Glide.with(imageView!!.context)
                 .load(track.imageURL)
                 .into(imageView)
 
         //set text
-        nameView.text = track.name
+        nameView?.text = track.name
 
-        inca.visibility = View.GONE
+        inca?.visibility = View.GONE
 
         return view
 
     }
-
 }

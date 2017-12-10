@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/marginbase"
     tools:context="com.learnandroid.huynh.music_app.OnlineActivity">
 
-    <LinearLayout
+
+    <include
+        android:id="@+id/imageHeader"
+        layout="@layout/image_custom_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="IncludeLayoutParam"></include>
+
+    <ListView
+        android:id="@+id/listViewCustom"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_below="@+id/imageHeader"
+        android:layout_marginTop="@dimen/marginbase"
+        tools:listitem="@layout/image_custom_view"></ListView>
 
-        <include
-            android:id="@+id/imageHeader"
-            layout="@layout/image_custom_view"></include>
-
-        <include
-            android:id="@+id/listViewCustom"
-            layout="@layout/item_listview_cus"
-            app:layout_constraintTop_toBottomOf="@+id/imageHeader"
-            tools:ignore="UnknownId" />
-
-    </LinearLayout>
-</ScrollView>
+</RelativeLayout>
