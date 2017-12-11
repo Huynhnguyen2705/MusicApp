@@ -126,6 +126,7 @@ class OnceFragment : Fragment() {
             startActivity(onlineIntent)
         }
 
+
     }
 
 

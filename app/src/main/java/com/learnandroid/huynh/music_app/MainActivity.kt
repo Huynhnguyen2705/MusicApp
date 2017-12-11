@@ -66,7 +66,6 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
         setContentView(R.layout.activity_main)
         // TODO: check if device doesn't have INTERNET
 
-
         // list of fragments - list of tab items
         val onceFragment: Fragment = OnceFragment()
         val twiceFragment: Fragment = TwiceFragment()
@@ -313,6 +312,7 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
     override fun onResume() {
         super.onResume()
         mAhthStateListener?.let { mAuth?.addAuthStateListener(it) }
+
     }
 
     // create menu view
