@@ -1,36 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/Background">
+    android:layout_height="wrap_content"
+    android:background="@color/Background"
+    android:fillViewport="false"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <include
             android:id="@+id/hottestBanner"
             layout="@layout/image_custom_view" />
 
         <include
             android:id="@+id/electronicBanner"
-            layout="@layout/image_custom_view" />
+            layout="@layout/image_custom_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/hottestBanner"
+            android:layout_marginTop="@dimen/marginbase" />
 
         <include
             android:id="@+id/urbanBanner"
-            layout="@layout/image_custom_view" />
+            layout="@layout/image_custom_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/electronicBanner"
+            android:layout_marginTop="@dimen/marginbase" />
 
         <include
             android:id="@+id/countryBanner"
-            layout="@layout/image_custom_view" />
+            layout="@layout/image_custom_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/urbanBanner"
+            android:layout_marginTop="@dimen/marginbase" />
 
         <include
             android:id="@+id/rockBanner"
-            layout="@layout/image_custom_view" />
+            layout="@layout/image_custom_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/countryBanner"
+            android:layout_marginTop="@dimen/marginbase" />
 
         <include
             android:id="@+id/latinBanner"
-            layout="@layout/image_custom_view" />
-    </LinearLayout>
+            layout="@layout/image_custom_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/rockBanner"
+            android:layout_marginTop="@dimen/marginbase" />
+    </RelativeLayout>
 
 </ScrollView>
