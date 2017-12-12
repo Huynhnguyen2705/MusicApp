@@ -38,6 +38,7 @@ class TrackAdapter(context: Context, var resource: Int, var trackList: ArrayList
         // get view
         val imageView = view!!.findViewById<ImageView>(R.id.imageTrack)
         val nameView = view.findViewById<TextView>(R.id.nameTrack)
+        val artistView = view.findViewById<TextView>(R.id.artistTrack)
         val inca = view.findViewById<com.taishi.library.Indicator>(R.id.indicator)
 
         //set image
@@ -47,6 +48,7 @@ class TrackAdapter(context: Context, var resource: Int, var trackList: ArrayList
 
         //set text
         nameView?.text = track.name
+        artistView?.text = track.artist_name
 
         inca?.visibility = View.GONE
 
