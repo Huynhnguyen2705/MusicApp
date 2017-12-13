@@ -8,4 +8,7 @@
     <color name="colorAccent">#c8e8ff</color>
     <color name="Background">#366a93</color>
     <color name="icon_anim_">#000000</color>
+    <color name="bt_accent">#125688</color>
+    <color name="fullscreen_line_color">#E5FFFFFF</color>
+    <color name="fullscreen_secondary_line_color">#E5CCCCCC</color>
 </resources>

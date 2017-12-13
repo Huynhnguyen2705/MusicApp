@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.support.design.widget.TabLayout
@@ -31,7 +32,7 @@ import wseemann.media.FFmpegMediaMetadataRetriever
 
 
 class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionListener,
-        TwiceFragment.OnFragmentInteractionListener, ThriceFragment.OnFragmentInteractionListener {
+        PlaybackControlsFragment.OnFragmentInteractionListener, ThriceFragment.OnFragmentInteractionListener {
 
 
     // Firebase Storage
@@ -58,7 +59,11 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
     var artist: Artist? = null
     var composer: Composer? = null
     var genre: Genre? = null
+    var mediaID: String = ""
 
+    val EXTRA_START_FULLSCREEN = "com.learnandroid.huynh.music_app.EXTRA_START_FULLSCREEN"
+    val EXTRA_CURRENT_MEDIA_DESCRIPTION = "com.learnandroid.huynh.music_app.CURRENT_MEDIA_DESCRIPTION"
+    val SAVED_MEDIA_ID = "com.learnandroid.huynh.music_app.MEDIA_ID"
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -68,17 +73,16 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
 
         // list of fragments - list of tab items
         val onceFragment: Fragment = OnceFragment()
-        val twiceFragment: Fragment = TwiceFragment()
-        val thriceFragment: Fragment = ThriceFragment()
+//        val twiceFragment: Fragment = PlaybackControlsFragment()
+//        val thriceFragment: Fragment = ThriceFragment()
         // add them to list
         listOfFragment.add(onceFragment)
-        listOfFragment.add(twiceFragment)
-        listOfFragment.add(thriceFragment)
+//        listOfFragment.add(twiceFragment)
+//        listOfFragment.add(thriceFragment)
 
 
         // Fire base Auth
         mAuth = FirebaseAuth.getInstance()
-
 
 
         //Firebase storage reference
@@ -93,6 +97,12 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
 
         login()
         user = pushInfoUser()
+
+        if (savedInstanceState == null) {
+            startFullScreenActivityIfNeeded(intent)
+        } else {
+            mediaID = savedInstanceState.getString(SAVED_MEDIA_ID)
+        }
 //        val uploadBtn = findViewById<Button>(R.id.upload) as Button
 //
 //        uploadBtn.setOnClickListener { it: View? ->
@@ -106,7 +116,20 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
 
     }
 
+    /**
+     * This func to display the full screen of play track
+     * @param intent: using getItent to passing data to fullSreen activity
+     */
+    fun startFullScreenActivityIfNeeded(intent: Intent) {
+        val parrcelableIntent = intent.getParcelableExtra<Parcelable>(EXTRA_CURRENT_MEDIA_DESCRIPTION)
+        if (intent != null && intent.getBooleanExtra(EXTRA_START_FULLSCREEN, false)) {
+            val fullScreenIntetnt = Intent(baseContext, FullScreenActivity::class.java)
+                    .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                    .putExtra(EXTRA_CURRENT_MEDIA_DESCRIPTION, parrcelableIntent)
+            startActivity(fullScreenIntetnt)
+        }
 
+    }
     /**
      * This func to push info current user
      * @param user: user info will be pushed
@@ -131,9 +154,9 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
                 if (!data?.exists()!!) {
                     mDatabaseReference.child("users").child(userID).setValue(v_user,
                             { databaseError: DatabaseError?, databaseReference: DatabaseReference ->
-                        Log.v("userinfo", "Successful. Or error" + databaseError)
+                                Log.v("userinfo", "Successful. Or error" + databaseError)
 
-                    })
+                            })
                 }
             }
 
@@ -187,8 +210,8 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
         if (listOfFragment.size > 0) {
             val adapter = ViewPagerAdapter(supportFragmentManager) // using the custom viewpager adapter
             adapter.addFragment(listOfFragment[0], getString(R.string.fragment_one)) // add fragment to the adapter and set its title
-            adapter.addFragment(listOfFragment[1], getString(R.string.fragment_two))
-            adapter.addFragment(listOfFragment[2], getString(R.string.fragment_three))
+//            adapter.addFragment(listOfFragment[1], getString(R.string.fragment_two))
+//            adapter.addFragment(listOfFragment[2], getString(R.string.fragment_three))
             viewPager.adapter = adapter //set viewpager's adapter
         }
     }
@@ -255,7 +278,6 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
                             if (composer_name != "") composer!!.pushUpdateTrackInfo(track_id, trackTitle, composer!!)
 
 
-
 //                        Log.v("trackInfo","Title: " + trackTitle)
 //                        Log.v("trackInfo","ImageUrl: " + downloadTrackImageUrl.toString())
 //                        Log.v("trackInfo","Link: " + downloadUrl.toString())
@@ -296,7 +318,6 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
         cursor.close()
         return filePath
     }
-
 
 
     override fun onStart() {

@@ -1,6 +1,7 @@
 package com.learnandroid.huynh.music_app
 
 import Entity.Track
+import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
@@ -15,6 +16,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.taishi.library.Indicator
 import kotlinx.android.synthetic.main.activity_online.*
 import kotlinx.android.synthetic.main.image_custom_view.view.*
+
 
 
 class OnlineActivity : AppCompatActivity() {
@@ -50,6 +52,10 @@ class OnlineActivity : AppCompatActivity() {
 
 //            if(playMusic(mTrackAdapter.getItem(i).trackURL)){
             indicator.visibility = View.VISIBLE
+            val intent = Intent(this, MediaPlayerService::class.java)
+            intent.action = MediaPlayerService.ACTION_PLAY
+            startService(intent)
+
             //}else indicator.visibility = View.GONE
         }
 
