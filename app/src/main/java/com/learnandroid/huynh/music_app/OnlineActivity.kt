@@ -56,7 +56,7 @@ class OnlineActivity : AppCompatActivity() {
             intent.action = MediaPlayerService.ACTION_PLAY
             startService(intent)
 
-            //}else indicator.visibility = View.GONE
+//            }else indicator.visibility = View.GONE
         }
 
 

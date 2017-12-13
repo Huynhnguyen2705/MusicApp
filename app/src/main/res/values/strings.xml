@@ -34,6 +34,7 @@
         <item>Czech</item>
         <item>China</item>
     </string-array>
+    <string name="aboutabout">Online Music Player made by team 19 :D</string>
 
     <!-- fragment playback-->
     <string name="currently_playing_song">Song currently playing</string>

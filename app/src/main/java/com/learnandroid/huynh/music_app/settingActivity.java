@@ -10,6 +10,7 @@ import android.widget.TextView;
 public class settingActivity extends AppCompatActivity {
     private android.support.v7.widget.Toolbar toolbar_Setting;
     private TextView languageTv;
+    private TextView aboutTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,5 +29,15 @@ public class settingActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.anim_right, R.anim.anim_left);
             }
         });
+        aboutTv = findViewById(R.id.aboutTv);
+        aboutTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent_AboutActivity = new Intent(settingActivity.this, AboutActivity.class);
+                startActivity(intent_AboutActivity);
+                overridePendingTransition(R.anim.anim_right, R.anim.anim_left);
+            }
+        });
+
     }
 }
