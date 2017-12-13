@@ -20,4 +20,16 @@
     <string name="upload">Upload</string>
     <string name="setting">Setting</string>
 
+    <!-- fragment playback-->
+    <string name="currently_playing_song">Song currently playing</string>
+    <string name="currently_playing_artist">Artist of currently playing song</string>
+    <string name="currently_playing_extra_info">Extra info for currently playing song</string>
+    <string name="play_pause">play or pause</string>
+
+
+    <!-- activity full screen-->
+    <string name="background_image_str">Background image for album art</string>
+    <string name="skip_prev">skip to previous</string>
+    <string name="skip_next">skip to next</string>
+
 </resources>
