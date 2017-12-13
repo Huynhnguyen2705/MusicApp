@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.learnandroid.huynh.music_app.LanguageActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/language_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/language"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="27dp" />
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical"
+
+        >
+
+        <RadioGroup
+            android:id="@+id/languageRadioG"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:divider="?android:dividerHorizontal"
+            android:showDividers="middle">
+
+            <RadioButton
+                android:id="@+id/tiengvietRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="13dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="13dp"
+                android:text="@string/tiengviet"
+                android:textSize="25dp" />
+
+            <RadioButton
+                android:id="@+id/englishRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="13dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="13dp"
+                android:text="@string/english"
+                android:textSize="25dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="13dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="13dp"
+                android:text="Thailand"
+                android:textSize="25dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="13dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="13dp"
+                android:text="Lao"
+                android:textSize="25dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="13dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="13dp"
+                android:text="China"
+                android:textSize="25dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="13dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="13dp"
+                android:text="Japan"
+                android:textSize="25dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="13dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="13dp"
+                android:text="Campodia"
+                android:textSize="25dp" />
+        </RadioGroup>
+    </LinearLayout>
+    <!--<TextView-->
+    <!--android:id="@+id/tiengvietTv"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="@string/tiengviet"-->
+    <!--android:paddingTop="13dp"-->
+    <!--android:paddingBottom="13dp"-->
+    <!--android:paddingLeft="10dp"-->
+    <!--android:textSize="25dp"></TextView>-->
+    <!--<TextView-->
+    <!--android:id="@+id/englishTv"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="@string/english"-->
+    <!--android:paddingTop="13dp"-->
+    <!--android:paddingBottom="13dp"-->
+    <!--android:paddingLeft="10dp"-->
+    <!--android:textSize="25dp"-->
+    <!--/>-->
+
+
+</android.support.constraint.ConstraintLayout><!--<?xml version="1.0" encoding="utf-8"?>--><!--<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--tools:context="com.learnandroid.huynh.music_app.LanguageActivity">--><!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--android:layout_width="fill_parent"--><!--android:layout_height="fill_parent"--><!--android:orientation="vertical" >--><!--<Spinner--><!--android:id="@+id/spinner1"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:entries="@array/language_array"--><!--android:gravity="center" android:paddingTop="25sp" />-->
+
+    <!--</LinearLayout>-->
+
+
+    <!--</android.support.constraint.ConstraintLayout>-->

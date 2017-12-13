@@ -86,9 +86,7 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         val viewPager = findViewById<ViewPager>(R.id.viewpager) as ViewPager
         val tabLayout = findViewById<TabLayout>(R.id.tabs) as TabLayout
         setUpTabLayout(viewPager, tabLayout)
@@ -339,6 +337,7 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
     /**
      * handle sign_out_menu_item clicked
      */
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.sign_out -> {
@@ -353,7 +352,13 @@ class MainActivity : AppCompatActivity(), OnceFragment.OnFragmentInteractionList
                 startActivityForResult(Intent.createChooser(intent, "Complete Action"), RC_UPLOAD)
                 true
             }
+            R.id.setting -> {
+                val settingintent = Intent(this, settingActivity::class.java)
+                startActivity(settingintent)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
+
         }
     }
 

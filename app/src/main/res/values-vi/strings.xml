@@ -12,27 +12,15 @@
 
     <string name="facebook_app_id">1750641754978423</string>
     <string name="fb_login_protocol_scheme">fb1750641754978423</string>
-    <string name="sign_out">Sign out</string>
-    <string name="sign_in">Sign in</string>
-    <string name="fragment_one">ONLINE</string>
+    <string name="sign_out">Đăng xuất</string>
+    <string name="sign_in">Đăng nhập</string>
+    <string name="fragment_one">Trực tuyến</string>
     <string name="fragment_two">TWO</string>
     <string name="fragment_three">THREE</string>
-    <string name="upload">Upload</string>
-    <string name="setting">Setting</string>
-    <string name="language">Language</string>
-    <string name="tiengviet">Tieng Viet</string>
-    <string name="english">English</string>
-    <string name="about">About</string>
-    <string-array name="language_array">
-        <item>Languege</item>
-        <item>English</item>
-        <item>Tieng Viet</item>
-        <item>Thailand</item>
-        <item>Lao</item>
-        <item>Campuchia</item>
-        <item>Japan</item>
-        <item>Czech</item>
-        <item>China</item>
-    </string-array>
-
+    <string name="upload">Tải lên</string>
+    <string name="setting">Cài đặt</string>
+    <string name="language">Ngôn ngữ</string>
+    <string name="tiengviet">Tiếng Việt</string>
+    <string name="english">Tiếng Anh</string>
+    <string name="about">Giới thiệu</string>
 </resources>

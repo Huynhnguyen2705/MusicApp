@@ -23,16 +23,5 @@
     <string name="tiengviet">Tieng Viet</string>
     <string name="english">English</string>
     <string name="about">About</string>
-    <string-array name="language_array">
-        <item>Languege</item>
-        <item>English</item>
-        <item>Tieng Viet</item>
-        <item>Thailand</item>
-        <item>Lao</item>
-        <item>Campuchia</item>
-        <item>Japan</item>
-        <item>Czech</item>
-        <item>China</item>
-    </string-array>
 
 </resources>
